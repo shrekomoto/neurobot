@@ -4,20 +4,24 @@ from keyboards import kb_client
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
+
 class FSMUser(StatesGroup):
     name = State()
     phone = State()
     mark = State()
 
 
-#@dp.message_handler(commands=['start'])
+# @dp.message_handler(commands=['start'])
 async def start_command(message: types.Message):
-    await message.reply('Привет!\nЯ жду твой отзыв! Если нужна помощь, введи \'/help\'', reply_markup=kb_client)
+    await message.reply('''Привет! Я – нейробот от Юлии Дедовой!
+Я задам вам несколько вопросов по поводу прошедшего Мастер-класса,
+А в конце вас ждет подарок от Юлии!''', reply_markup=kb_client)
 
 
 # @dp.message_handler(commands=["отзыв"], state=None)
 async def making_user(msg: types.Message, state: FSMContext):
-    await bot.send_message(msg.from_user.id, 'Введите ваше имя и фамилию')
+    await FSMUser.name.set()
+    await bot.answer('Введите ваше имя и фамилию')
 
 
 # @dp.message_handler(state=User.name)
@@ -25,7 +29,7 @@ async def name_taken(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['name'] = msg.text
     await FSMUser.next()
-    await msg.reply('Введите ваш номер телефона')
+    await msg.answer('Введите ваш номер телефона')
 
 
 # @dp.message_handler(state=User.phone)
@@ -33,7 +37,8 @@ async def phone_taken(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['phone'] = msg.text
     await FSMUser.next()
-    await msg.reply('Оцените по десятибалльной шкале')
+    await msg.answer('Оцените по десятибалльной шкале')
+
 
 # @dp.message_handler(state=User.mark)
 async def mark_taken(msg: types.Message, state: FSMContext):

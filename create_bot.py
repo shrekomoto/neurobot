@@ -7,4 +7,4 @@ storage = MemoryStorage()
 
 
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot=bot)
+dp = Dispatcher(bot=bot, storage=storage)

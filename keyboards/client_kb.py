@@ -58,6 +58,8 @@ b88 = KeyboardButton('/Увеличение дохода')
 b89 = KeyboardButton('/Рост в профессии')
 b810 = KeyboardButton('/Смена работы')
 b811 = KeyboardButton('/Другое')
+#
+# eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b81).add(b82).add(b83).add(b84).add(b85).add(b86).add(
+#                                                             b87).add(b88).add(b89).add(b810).add(b811)
 
-eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b81).add(b82).add(b83).add(b84).add(b85).add(b86).add(
-                                                            b87).add(b88).add(b89).add(b810).add(b811)
+eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).row(b81,b82).row(b83,b84).row(b85,b86).row(b87,b88).row(b89,b810,b811)

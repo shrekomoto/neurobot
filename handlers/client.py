@@ -3,11 +3,14 @@ from create_bot import dp, bot
 from keyboards import client_kb
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
+import emoji
+from aiogram.dispatcher.filters import Text
 
 
 class FSMUser(StatesGroup):
     name = State()
     phone = State()
+    mk = State()
     mark = State()
     first_q = State()
     second_q = State()
@@ -21,6 +24,8 @@ class FSMUser(StatesGroup):
 
 # @dp.message_handler(commands=['start'])
 async def start_command(msg: types.Message):
+    with open('/Users/Admin/PycharmProjects/neurobot/database/greet.jpeg', 'rb') as photo:
+        await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
     await msg.reply('''Привет! Я – нейробот от Юлии Дедовой!
 Я задам вам несколько вопросов по поводу прошедшего Мастер-класса,
 А в конце вас ждет подарок от Юлии!''', reply_markup=client_kb.kb_client)
@@ -45,7 +50,14 @@ async def phone_taken(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['phone'] = msg.text
     await FSMUser.next()
-    await msg.answer('Оцените по десятибалльной шкале')
+    await msg.answer('Напишите название мастер-класса и дату его посещения (например, 22.02.2023)')
+
+
+async def mk_date(msg: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['mk'] = msg.text
+    await FSMUser.next()
+    await msg.answer('Оцените мероприятие по десятибалльной шкале')
 
 
 # @dp.message_handler(state=User.mark)
@@ -68,7 +80,8 @@ async def second_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['second_q'] = msg.text
     await FSMUser.next()
-    await msg.answer('Были ли объяснения и комментарии понятны?', reply_markup=client_kb.third_q_kb)
+    await msg.answer('Были ли объяснения и комментарии понятны? Если остались вопросы, пиши их сюда',
+                     reply_markup=client_kb.third_q_kb)
 
 
 async def third_q(msg: types.Message, state: FSMContext):
@@ -113,18 +126,31 @@ async def eighth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         await msg.reply(str(data))
     await state.finish()
+    with open('/Users/Admin/PycharmProjects/neurobot/database/final.jpeg', 'rb') as photo:
+        await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
     await msg.answer('''Индивидуальные сессии проходят дистанционно по видео-связи в удобное для Вас время.
-    Специалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.
-Проработка вашей темы под руководством профессионального инструктора – это:
-безопасно и экологично для вас с соблюдением всех шагов и правил психологического алгоритма
-обратная связь и рекомендации специалиста
-возможность задать все интересующие вопросы для
-дальнейшей самостоятельной работы
-получение результата за один или несколько рисунков
+Специалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.
+    
+    Проработка вашей темы под руководством профессионального инструктора – это:
+· безопасно и экологично для вас с соблюдением всех шагов и правил психологического алгоритма
+· обратная связь и рекомендации специалиста
+· возможность задать все интересующие вопросы для
+· дальнейшей самостоятельной работы
+· получение результата за один или несколько рисунков
 
 
 Записаться на индивидуальную сессию Вы можете по ссылке
     ''')
+
+
+@dp.message_handler(state='*', commands=['отмена'])
+@dp.message_handler(Text(equals='отмена', ignore_case=True), state='*')
+async def cancel_handler(msg: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await msg.reply('Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start')
 
 
 def register_handler_client(dp: Dispatcher):
@@ -132,6 +158,7 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(making_user, commands=['отзыв'], state=None)
     dp.register_message_handler(name_taken, state=FSMUser.name)
     dp.register_message_handler(phone_taken, state=FSMUser.phone)
+    dp.register_message_handler(mk_date, state=FSMUser.mk)
     dp.register_message_handler(mark_taken, state=FSMUser.mark)
     dp.register_message_handler(first_q, state=FSMUser.first_q)
     dp.register_message_handler(second_q, state=FSMUser.second_q)

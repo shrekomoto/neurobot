@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.emoji import emojize, demojize
 
 
@@ -68,3 +68,7 @@ b811 = KeyboardButton('Другое')
 eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).row(b81, b82).row(b83, b84).row(b85,
                                                                                                                 b86).row(
     b87, b88).row(b89, b810, b811)
+
+urlb1 = InlineKeyboardButton(text='Ссылка на канал', url='https://t.me/verygood_feedback_bot')
+urlb2 = InlineKeyboardButton(text='Ссылка на лс', url='https://t.me/st_demetra')
+url_kb = InlineKeyboardMarkup(row_width=1).row(urlb1, urlb2)

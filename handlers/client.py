@@ -3,7 +3,7 @@ from create_bot import dp, bot
 from keyboards import client_kb
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
-import emoji
+from database import neuro_db
 from aiogram.dispatcher.filters import Text
 
 
@@ -123,8 +123,7 @@ async def seventh_q(msg: types.Message, state: FSMContext):
 async def eighth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['eighth_q'] = msg.text
-    async with state.proxy() as data:
-        await msg.reply(str(data))
+    await neuro_db.sql_add_command(state)
     await state.finish()
     with open('/Users/Admin/PycharmProjects/neurobot/database/final.jpeg', 'rb') as photo:
         await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
@@ -140,7 +139,7 @@ async def eighth_q(msg: types.Message, state: FSMContext):
 
 
 Записаться на индивидуальную сессию Вы можете по ссылке
-    ''')
+    ''', reply_markup=client_kb.url_kb)
 
 
 @dp.message_handler(state='*', commands=['отмена'])
@@ -152,6 +151,9 @@ async def cancel_handler(msg: types.Message, state: FSMContext):
     await state.finish()
     await msg.reply('Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start')
 
+@dp.message_handler(commands=['admin'])
+async def check_db(msg: types.Message):
+    await neuro_db.sql_read(msg)
 
 def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(start_command, commands=['start'])
@@ -168,3 +170,4 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(sixth_q, state=FSMUser.sixth_q)
     dp.register_message_handler(seventh_q, state=FSMUser.seventh_q)
     dp.register_message_handler(eighth_q, state=FSMUser.eighth_q)
+    dp.register_message_handler(check_db, commands=['admin'])

@@ -1,7 +1,10 @@
 from aiogram.utils import executor
 from create_bot import dp
 from handlers import client
+from database import neuro_db
 
+
+neuro_db.sql_start()
 
 client.register_handler_client(dp)
 

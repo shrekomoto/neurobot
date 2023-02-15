@@ -1,16 +1,16 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
-from aiogram.utils.emoji import emojize, demojize
+import emoji
 
 
 # стартовые кнопки
-b1 = KeyboardButton('/отзыв')
-b2 = KeyboardButton('отмена')
+b1 = KeyboardButton('/начать')
+b2 = KeyboardButton('остановить бота')
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1)
 
 # структура кнопок вопросов - b24, где b - button, 2 - номер вопроса, 4 - номер варианта ответа на данный вопрос
-b11 = KeyboardButton('Нет, сегодня впервые рисовала'+ demojize(':laughing:'))
-b12 = KeyboardButton('Рисовала на бесплатном марафоне')
+b11 = KeyboardButton('Нет, сегодня впервые рисовала'+ emoji.emojize(':thumbs_up:'))
+b12 = KeyboardButton('Рисовала на бесплатном марафоне' + emoji.emojize(':beaming_face_with_smiling_eyes:'))
 b13 = KeyboardButton('Рисовала другой алгоритм на очном МК')
 b14 = KeyboardButton('Рисовала индивидуально со специалистом нейрографии')
 
@@ -21,8 +21,8 @@ b22 = KeyboardButton('вошли в состояние медитации, по�
 b23 = KeyboardButton('получили представление о методе и понимание, как работает нейрографика')
 b24 = KeyboardButton('запомнили основные правила и технику безопасности для экологичного рисования')
 
-second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).row(b21, b22).row(b23, b24).add(b2)
-# second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b21).add(b22).add(b23).add(b24).add(b2)
+#second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).row(b21, b22).row(b23, b24).add(b2)
+second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b21).add(b22).add(b23).add(b24).add(b2)
 
 # b31 = KeyboardButton('/Да')
 # b32 = KeyboardButton('/Нет')
@@ -37,7 +37,7 @@ b44 = KeyboardButton('Раздражение')
 b45 = KeyboardButton('Повысился уровень энергии, позитив, общий тонус, азарт')
 b46 = KeyboardButton('Появилось много идей, возникли инсайты, прояснилась ситуация')
 
-fourth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b41).add(b42).add(b43).add(b44).add(
+fourth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b42).add(b41).row(b44,b43).add(
     b45).add(b46).add(b2)
 
 b61 = KeyboardButton('Да')
@@ -69,6 +69,6 @@ eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).
                                                                                                                 b86).row(
     b87, b88).row(b89, b810, b811)
 
-urlb1 = InlineKeyboardButton(text='Ссылка на канал', url='https://t.me/verygood_feedback_bot')
+urlb1 = InlineKeyboardButton(text='Ссылка на канал', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 urlb2 = InlineKeyboardButton(text='Ссылка на лс', url='https://t.me/st_demetra')
 url_kb = InlineKeyboardMarkup(row_width=1).row(urlb1, urlb2)

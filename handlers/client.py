@@ -1,3 +1,4 @@
+import emoji
 from aiogram import types, Dispatcher
 from create_bot import dp, bot
 from keyboards import client_kb
@@ -109,7 +110,7 @@ async def sixth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['sixth_q'] = msg.text
     await  FSMUser.next()
-    await msg.answer('Хотели бы Вы записаться на индивидуальную сессию?', reply_markup=client_kb.seventh_q_kb)
+    await msg.answer('Хотели бы Вы записаться на индивидуальную сессию?' + emoji.emojize(':index_pointing_at_the_viewer:'), reply_markup=client_kb.seventh_q_kb)
 
 
 async def seventh_q(msg: types.Message, state: FSMContext):
@@ -142,8 +143,8 @@ async def eighth_q(msg: types.Message, state: FSMContext):
     ''', reply_markup=client_kb.url_kb)
 
 
-@dp.message_handler(state='*', commands=['отмена'])
-@dp.message_handler(Text(equals='отмена', ignore_case=True), state='*')
+@dp.message_handler(state='*', commands=['остановить бота'])
+@dp.message_handler(Text(equals='остановить бота', ignore_case=True), state='*')
 async def cancel_handler(msg: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
@@ -155,9 +156,11 @@ async def cancel_handler(msg: types.Message, state: FSMContext):
 async def check_db(msg: types.Message):
     await neuro_db.sql_read(msg)
 
+
+
 def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(start_command, commands=['start'])
-    dp.register_message_handler(making_user, commands=['отзыв'], state=None)
+    dp.register_message_handler(making_user, commands=['начать'], state=None)
     dp.register_message_handler(name_taken, state=FSMUser.name)
     dp.register_message_handler(phone_taken, state=FSMUser.phone)
     dp.register_message_handler(mk_date, state=FSMUser.mk)

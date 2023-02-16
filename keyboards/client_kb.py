@@ -3,8 +3,8 @@ import emoji
 
 
 # стартовые кнопки
-b1 = KeyboardButton('/начать')
-b2 = KeyboardButton('остановить бота')
+b1 = KeyboardButton('/begin')
+b2 = KeyboardButton('/stop')
 
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1)
 

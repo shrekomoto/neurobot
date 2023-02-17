@@ -5,7 +5,9 @@ from keyboards import client_kb
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from database import neuro_db
+from aiogram.utils.markdown import bold
 from aiogram.dispatcher.filters import Text
+from aiogram.types import ParseMode
 
 
 class FSMUser(StatesGroup):
@@ -19,8 +21,9 @@ class FSMUser(StatesGroup):
     fourth_q = State()
     fifth_q = State()
     sixth_q = State()
-    seventh_q = State()
+    # seventh_q = State()
     eighth_q = State()
+    gift = State()
 
 
 # @dp.message_handler(commands=['start'])
@@ -103,20 +106,22 @@ async def fifth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['fifth_q'] = msg.text
     await FSMUser.next()
-    await msg.answer('Хотели бы Вы получать приглашения на МК по другим темам?', reply_markup=client_kb.sixth_q_kb)
+    await msg.answer(
+        'Хотели бы Вы получать приглашения на МК по другим темам?' + emoji.emojize(':index_pointing_at_the_viewer:'),
+        reply_markup=client_kb.sixth_q_kb)
 
 
 async def sixth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['sixth_q'] = msg.text
     await  FSMUser.next()
-    await msg.answer('Хотели бы Вы записаться на индивидуальную сессию?' + emoji.emojize(':index_pointing_at_the_viewer:'), reply_markup=client_kb.seventh_q_kb)
-
-
-async def seventh_q(msg: types.Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['seventh_q'] = msg.text
-    await FSMUser.next()
+    #     await msg.answer('Хотели бы Вы записаться на индивидуальную сессию?', reply_markup=client_kb.seventh_q_kb)
+    #
+    #
+    # async def seventh_q(msg: types.Message, state: FSMContext):
+    #     async with state.proxy() as data:
+    #         data['seventh_q'] = msg.text
+    #     await FSMUser.next()
     await msg.answer('Какой вопрос или сферу жизни Вы хотите проработать на индивидуальной сессии?',
                      reply_markup=client_kb.eighth_q_kb)
 
@@ -125,22 +130,34 @@ async def eighth_q(msg: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['eighth_q'] = msg.text
     await neuro_db.sql_add_command(state)
-    await state.finish()
+    await FSMUser.next()
+    await msg.answer('''Благодарю за ответы!
+Выбирайте подарок:''', reply_markup=client_kb.gift_kb)
+
+
+async def gift(msg: types.Message, state: FSMContext):
+    if msg.text == 'Скидка на индивидуальную сессию':
+        with open('/Users/Admin/PycharmProjects/neurobot/database/gift1.jpg', 'rb') as photo:
+            await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
+        await state.finish()
+    elif msg.text == 'Скидка на Мастер-класс в группе':
+        with open('/Users/Admin/PycharmProjects/neurobot/database/gift2.jpg', 'rb') as photo:
+            await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
+        await state.finish()
+    else:
+        await msg.reply('Нажмите верную кнопку')
+
+    await msg.answer(bold("""Индивидуальные сессии проходят дистанционно по видеосвязи в удобное для Вас время""") +
+                     '\nСпециалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.', parse_mode=ParseMode.MARKDOWN)
     with open('/Users/Admin/PycharmProjects/neurobot/database/final.jpeg', 'rb') as photo:
         await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
-    await msg.answer('''Индивидуальные сессии проходят дистанционно по видео-связи в удобное для Вас время.
-Специалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.
-    
-    Проработка вашей темы под руководством профессионального инструктора – это:
-· безопасно и экологично для вас с соблюдением всех шагов и правил психологического алгоритма
-· обратная связь и рекомендации специалиста
-· возможность задать все интересующие вопросы для
-· дальнейшей самостоятельной работы
-· получение результата за один или несколько рисунков
+    await msg.answer('''        
+        Проработка вашей темы под руководством профессионального инструктора – это:
+    · безопасно и экологично для вас с соблюдением всех шагов и правил психологического алгоритма
+    · обратная связь и рекомендации специалиста
+    · возможность задать все интересующие вопросы для дальнейшей самостоятельной работы
+    · получение результата за один или несколько рисунков''', reply_markup=client_kb.url_kb)
 
-
-Записаться на индивидуальную сессию Вы можете по ссылке
-    ''', reply_markup=client_kb.url_kb)
 
 
 @dp.message_handler(state='*', commands=['stop'])
@@ -150,7 +167,9 @@ async def cancel_handler(msg: types.Message, state: FSMContext):
     if current_state is None:
         return
     await state.finish()
-    await msg.reply('Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start')
+    await msg.reply(
+        'Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start')
+
 
 @dp.message_handler(commands=['admin'])
 async def check_db(msg: types.Message):
@@ -158,7 +177,6 @@ async def check_db(msg: types.Message):
         await neuro_db.sql_read(msg)
     else:
         await msg.reply('У вас нет прав администратора')
-
 
 
 def register_handler_client(dp: Dispatcher):
@@ -174,6 +192,7 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(fourth_q, state=FSMUser.fourth_q)
     dp.register_message_handler(fifth_q, state=FSMUser.fifth_q)
     dp.register_message_handler(sixth_q, state=FSMUser.sixth_q)
-    dp.register_message_handler(seventh_q, state=FSMUser.seventh_q)
+    # dp.register_message_handler(seventh_q, state=FSMUser.seventh_q)
     dp.register_message_handler(eighth_q, state=FSMUser.eighth_q)
     dp.register_message_handler(check_db, commands=['admin'])
+    dp.register_message_handler(gift, state=FSMUser.gift)

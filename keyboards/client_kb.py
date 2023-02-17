@@ -9,10 +9,10 @@ b2 = KeyboardButton('/stop')
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1)
 
 # структура кнопок вопросов - b24, где b - button, 2 - номер вопроса, 4 - номер варианта ответа на данный вопрос
-b11 = KeyboardButton('Нет, сегодня впервые рисовала'+ emoji.emojize(':thumbs_up:'))
-b12 = KeyboardButton('Рисовала на бесплатном марафоне' + emoji.emojize(':beaming_face_with_smiling_eyes:'))
-b13 = KeyboardButton('Рисовала другой алгоритм на очном МК')
-b14 = KeyboardButton('Рисовала индивидуально со специалистом нейрографии')
+b11 = KeyboardButton('Нет, сегодня впервые рисовал/а'+ emoji.emojize(':thumbs_up:'))
+b12 = KeyboardButton('Рисовал/а на бесплатном марафоне' + emoji.emojize(':beaming_face_with_smiling_eyes:'))
+b13 = KeyboardButton('Рисовал/а другой алгоритм на очном МК')
+b14 = KeyboardButton('Рисовал/а индивидуально со специалистом нейрографии')
 
 first_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b11).add(b12).add(b13).add(b14).add(b2)
 
@@ -55,7 +55,7 @@ b82 = KeyboardButton('Здоровье')
 b83 = KeyboardButton('Отношения в семье')
 b84 = KeyboardButton('Отношения с партнером')
 b85 = KeyboardButton('Отношения с детьми')
-b86 = KeyboardButton('Отдых и путешествия')
+b86 = KeyboardButton('Отдых; Путешествия')
 b87 = KeyboardButton('Переезд')
 b88 = KeyboardButton('Увеличение дохода')
 b89 = KeyboardButton('Рост в профессии')
@@ -72,3 +72,8 @@ eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).
 urlb1 = InlineKeyboardButton(text='Ссылка на канал', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 urlb2 = InlineKeyboardButton(text='Ссылка на лс', url='https://t.me/st_demetra')
 url_kb = InlineKeyboardMarkup(row_width=1).row(urlb1, urlb2)
+
+b91 = KeyboardButton('Скидка на индивидуальную сессию')
+b92 = KeyboardButton('Скидка на Мастер-класс в группе')
+
+gift_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b91).add(b92)

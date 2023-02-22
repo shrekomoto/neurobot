@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from database import neuro_db
 from aiogram.utils.markdown import bold
 from aiogram.dispatcher.filters import Text
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, ReplyKeyboardRemove
 
 
 class FSMUser(StatesGroup):
@@ -30,7 +30,7 @@ class FSMUser(StatesGroup):
 async def start_command(msg: types.Message):
     with open('/Users/Admin/PycharmProjects/neurobot/database/greet.jpeg', 'rb') as photo:
         await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
-    await msg.reply('''Привет! Я – нейробот от Юлии Дедовой!
+    await msg.reply('''Привет! Я – НейроБот от Юлии Дедовой!
 Я задам вам несколько вопросов по поводу прошедшего Мастер-класса,
 А в конце вас ждет подарок от Юлии!''', reply_markup=client_kb.kb_client)
 
@@ -107,7 +107,7 @@ async def fifth_q(msg: types.Message, state: FSMContext):
         data['fifth_q'] = msg.text
     await FSMUser.next()
     await msg.answer(
-        'Хотели бы Вы получать приглашения на МК по другим темам?' + emoji.emojize(':index_pointing_at_the_viewer:'),
+        'Хотели бы Вы получать приглашения на МК по другим темам?',
         reply_markup=client_kb.sixth_q_kb)
 
 
@@ -138,24 +138,24 @@ async def eighth_q(msg: types.Message, state: FSMContext):
 async def gift(msg: types.Message, state: FSMContext):
     if msg.text == 'Скидка на индивидуальную сессию':
         with open('/Users/Admin/PycharmProjects/neurobot/database/gift1.jpg', 'rb') as photo:
-            await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
+            await bot.send_photo(chat_id=msg.from_user.id, photo=photo, reply_markup=ReplyKeyboardRemove())
         await state.finish()
     elif msg.text == 'Скидка на Мастер-класс в группе':
         with open('/Users/Admin/PycharmProjects/neurobot/database/gift2.jpg', 'rb') as photo:
-            await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
+            await bot.send_photo(chat_id=msg.from_user.id, photo=photo, reply_markup=ReplyKeyboardRemove())
         await state.finish()
     else:
         await msg.reply('Нажмите верную кнопку')
 
     await msg.answer(bold("""Индивидуальные сессии проходят дистанционно по видеосвязи в удобное для Вас время""") +
-                     '\nСпециалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.', parse_mode=ParseMode.MARKDOWN)
+                     '\nСпециалист по нейрографике порекомендует, какой именно алгоритм нарисовать, чтобы получить результат, который нужен вам.', parse_mode=ParseMode.MARKDOWN)
     with open('/Users/Admin/PycharmProjects/neurobot/database/final.jpeg', 'rb') as photo:
         await bot.send_photo(chat_id=msg.from_user.id, photo=photo)
     await msg.answer('''        
-        Проработка вашей темы под руководством профессионального инструктора – это:
+        Проработка вашей темы под руководством профессионального инструктора – это:
     · безопасно и экологично для вас с соблюдением всех шагов и правил психологического алгоритма
     · обратная связь и рекомендации специалиста
-    · возможность задать все интересующие вопросы для дальнейшей самостоятельной работы
+    · возможность задать все интересующие вопросы для дальнейшей самостоятельной работы
     · получение результата за один или несколько рисунков''', reply_markup=client_kb.url_kb)
 
 
@@ -168,12 +168,12 @@ async def cancel_handler(msg: types.Message, state: FSMContext):
         return
     await state.finish()
     await msg.reply(
-        'Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start')
+        'Заполнение отзыва отменено. Если захотите вернуться и оставить отзыв, воспользуйтесь командой /start', reply_markup=ReplyKeyboardRemove())
 
 
 @dp.message_handler(commands=['admin'])
 async def check_db(msg: types.Message):
-    if msg.from_user.id == 369716486:
+    if msg.from_user.id in [369716486, 869657610]:
         await neuro_db.sql_read(msg)
     else:
         await msg.reply('У вас нет прав администратора')

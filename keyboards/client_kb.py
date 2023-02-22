@@ -1,5 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
-import emoji
+
 
 
 # стартовые кнопки
@@ -9,17 +9,17 @@ b2 = KeyboardButton('/stop')
 kb_client = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b1)
 
 # структура кнопок вопросов - b24, где b - button, 2 - номер вопроса, 4 - номер варианта ответа на данный вопрос
-b11 = KeyboardButton('Нет, сегодня впервые рисовал/а'+ emoji.emojize(':thumbs_up:'))
-b12 = KeyboardButton('Рисовал/а на бесплатном марафоне' + emoji.emojize(':beaming_face_with_smiling_eyes:'))
+b11 = KeyboardButton('Нет, сегодня впервые рисовал/а')
+b12 = KeyboardButton('Рисовал/а на бесплатном марафоне')
 b13 = KeyboardButton('Рисовал/а другой алгоритм на очном МК')
-b14 = KeyboardButton('Рисовал/а индивидуально со специалистом нейрографии')
+b14 = KeyboardButton('Рисовал/а индивидуально со специалистом нейрографики')
 
 first_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b11).add(b12).add(b13).add(b14).add(b2)
 
-b21 = KeyboardButton('просто получили удовольствие от процесса')
-b22 = KeyboardButton('вошли в состояние медитации, появилось ощущение гармонии')
-b23 = KeyboardButton('получили представление о методе и понимание, как работает нейрографика')
-b24 = KeyboardButton('запомнили основные правила и технику безопасности для экологичного рисования')
+b21 = KeyboardButton('Просто получили удовольствие от процесса')
+b22 = KeyboardButton('Вошли в состояние медитации, появилось ощущение гармонии')
+b23 = KeyboardButton('Получили представление о методе и понимание, как работает нейрографика')
+b24 = KeyboardButton('Запомнили основные правила и технику безопасности для экологичного рисования')
 
 #second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).row(b21, b22).row(b23, b24).add(b2)
 second_q_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b21).add(b22).add(b23).add(b24).add(b2)
@@ -69,11 +69,11 @@ eighth_q_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).
                                                                                                                 b86).row(
     b87, b88).row(b89, b810, b811)
 
-urlb1 = InlineKeyboardButton(text='Ссылка на канал', url='https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-urlb2 = InlineKeyboardButton(text='Ссылка на лс', url='https://t.me/st_demetra')
-url_kb = InlineKeyboardMarkup(row_width=1).row(urlb1, urlb2)
+urlb1 = InlineKeyboardButton(text='Присоединиться к каналу', url='https://t.me/NeuroClubYuliiDedov')
+urlb2 = InlineKeyboardButton(text='Записаться на индивидуальную сессию', url='https://t.me/st_demetra')
+url_kb = InlineKeyboardMarkup(row_width=1).add(urlb2).add(urlb1)
 
 b91 = KeyboardButton('Скидка на индивидуальную сессию')
 b92 = KeyboardButton('Скидка на Мастер-класс в группе')
 
-gift_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(b91).add(b92)
+gift_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(b91).add(b92)
